@@ -8,15 +8,13 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
-
         /*
          * 1. Capturar os dados do IMBD, por http, via GET;
          * 2. Fazer o parse dos dados armazenados(Titulo, poster, classificação)
          * 3. Mostrar para o usuário o dado tratado;
          */
 
-        final String URL_MOCK_IMDB = "https://mocki.io/v1/9a7c1ca9-29b4-4eb3-8306-1adb9d159060";
-        URI endereco = URI.create(URL_MOCK_IMDB);                
+        URI endereco = URI.create(Url.ROTA);                
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -24,8 +22,10 @@ public class App {
         JsonParser parser = new JsonParser();        
         List<Map<String, String>> listaDeFilmes = parser.parse(Body);
         
-        for (Map<String,String> map : listaDeFilmes) {
-            System.out.println(map.get("title"));
+        for (Map<String,String> map : listaDeFilmes) { 
+            Double Nota =  Math.floor(Double.parseDouble(map.get("imDbRating")));           
+            GeradorDeIcones.GerarEImprimir("\u2B50", Nota);           
+            System.out.println(String.format("\u001b[1m%s", map.get("title")));
             System.out.println(map.get("image"));            
             System.out.println(map.get("imDbRating"));
             System.out.println("");
